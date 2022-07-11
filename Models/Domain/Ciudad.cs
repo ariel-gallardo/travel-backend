@@ -1,5 +1,8 @@
-﻿namespace Models.Domain
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Models.Domain
 {
+    [Index(nameof(Nombre), IsUnique = true)]
     public class Ciudad : Entity
     {
         public string Nombre { get; set; }

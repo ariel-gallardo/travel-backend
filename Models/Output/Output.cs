@@ -1,4 +1,7 @@
-﻿namespace Models.Output
+﻿using System;
+using System.Collections.Generic;
+
+namespace Models.Output
 {
     public class Output<T>
     {

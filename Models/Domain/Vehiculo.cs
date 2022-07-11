@@ -1,5 +1,8 @@
-﻿namespace Models.Domain
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Models.Domain
 {
+    [Index(nameof(Patente), IsUnique = true)]
     public class Vehiculo : Entity
     {
         public string Patente { get; set; }
