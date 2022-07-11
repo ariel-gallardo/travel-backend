@@ -18,7 +18,20 @@ namespace Repository
 
         public TravelContext(DbContextOptions options) : base(options)
         {
+            
+        }
 
+        protected override void OnModelCreating(ModelBuilder m)
+        {
+            m.Entity<Viaje>()
+                .HasOne(v => v.CiudadOrigen)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            m.Entity<Viaje>()
+                .HasOne(v => v.CiudadDestino)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

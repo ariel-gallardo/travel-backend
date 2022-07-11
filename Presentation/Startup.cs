@@ -1,4 +1,7 @@
-﻿namespace Presentation
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
+
+namespace Presentation
 {
     public class Startup
     {
@@ -12,6 +15,10 @@
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TravelContext>(opt =>
+            {
+                opt.UseSqlServer(_configuration.GetConnectionString("TravelConnection"));
+            });
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -26,6 +33,7 @@
                 app.UseSwaggerUI();
             }
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(e => e.MapControllers());
         }

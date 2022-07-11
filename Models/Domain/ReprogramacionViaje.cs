@@ -1,6 +1,8 @@
-﻿namespace Models.Domain
+﻿using System;
+
+namespace Models.Domain
 {
-    public class ReprogramacionViaje
+    public class ReprogramacionViaje : Entity
     {
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
