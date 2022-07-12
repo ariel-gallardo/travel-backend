@@ -6,8 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Input\" />
-    <Folder Include="Output\" />
     <Folder Include="Domain\" />
   </ItemGroup>
 

@@ -6,16 +6,16 @@ namespace Presentation.Controllers
 {
     [Route($"api/[controller]")]
     [ApiController]
-    public class CiudadesController : ControllerBase, ControllerMethods<Models.Output.Ciudad, Models.Input.Ciudad>
+    public class PaisesController : ControllerBase, ControllerMethods<Models.Output.Pais, Models.Input.Pais>
     {
-        private readonly ICiudadesServices _services;
-        public CiudadesController(ICiudadesServices services)
+        private readonly IPaisesServices _services;
+        public PaisesController(IPaisesServices services)
         {
             _services = services;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Models.Input.Ciudad t)
+        public async Task<IActionResult> Create([FromBody] Models.Input.Pais t)
         {
             var output = await _services.Create(t);
             return StatusCode(output.StatusCode, output);
@@ -25,7 +25,7 @@ namespace Presentation.Controllers
         public async Task<IActionResult> FindAll(int page)
         {
             var output = await _services.FindAll(page, 10);
-            return StatusCode(output.StatusCode,output);
+            return StatusCode(output.StatusCode, output);
         }
 
         [HttpGet("{id}")]
@@ -43,7 +43,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Models.Input.Ciudad t, long id)
+        public async Task<IActionResult> Update([FromBody] Models.Input.Pais t, long id)
         {
             var output = await _services.Update(t, id);
             return StatusCode(output.StatusCode, output);

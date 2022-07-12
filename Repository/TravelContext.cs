@@ -16,7 +16,29 @@ namespace Repository
         public DbSet<Viaje> Viajes { get; set; }
         #endregion
 
-        public TravelContext(DbContextOptions options) : base(options)
+        public object GetDbSet(string type)
+        {
+
+                if (typeof(Ciudad).ToString() == type)
+                    return Ciudades;
+                if( typeof(EstadoViaje).ToString() == type)
+                    return EstadoViajes;
+                if( typeof(Pais).ToString() == type)
+                    return Paises;
+                if( typeof(Pronostico).ToString() == type)
+                    return Pronosticos;
+                if( typeof(ReprogramacionViaje).ToString() == type)
+                    return ReprogramacionViajes;
+                if( typeof(TipoVehiculo).ToString() == type)
+                    return TipoVehiculos;
+                if( typeof(Vehiculo).ToString() == type)
+                    return Vehiculos;
+                if( typeof(Viaje).ToString() == type)
+                    return Viajes;
+            return null;
+        }
+
+        public TravelContext(DbContextOptions<TravelContext> options) : base(options)
         {
             
         }
