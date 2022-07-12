@@ -111,8 +111,8 @@ namespace Services
         {
             var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
             var output = new Output<OutputType>();
-            output.Messages.Add($"{typeof(DomainType).Name}{(output.Data != null ? " " : " not")} found.");
-            output.StatusCode = output.Data != null ? 200 : 404;
+            output.Messages.Add($"{typeof(DomainType).Name}{(entity != null ? "" : " not")} found.");
+            output.StatusCode = entity != null ? 200 : 404;
             if(entity != null)
                 output.Data = _mapper.Map<DomainType, OutputType>(entity);
 
