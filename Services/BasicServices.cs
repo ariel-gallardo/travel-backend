@@ -34,7 +34,7 @@ namespace Services
             {
                 Console.WriteLine(e.Message);
                 output.Messages.Add($"{typeof(DomainType).Name} cannot be created.");
-                output.StatusCode = 422;
+                output.StatusCode = 400;
                 output.Data = false;
             }
 

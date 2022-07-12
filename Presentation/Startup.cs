@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System.Reflection;
 
 namespace Presentation
 {
@@ -25,7 +26,12 @@ namespace Presentation
             ConfigMapper(services);
             Middleware.DependencyInjection.AddDependencies(services);
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(s =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                s.IncludeXmlComments(xmlPath);
+            });
         }
 
         public void ConfigMapper(IServiceCollection services)
@@ -40,7 +46,6 @@ namespace Presentation
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
         }
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Configure the HTTP request pipeline.
