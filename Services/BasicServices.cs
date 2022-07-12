@@ -80,6 +80,7 @@ namespace Services
             var totalItems = await Count();
             var result = await _repository
                 .AsQueryable()
+                .Where(p => p.DeletedAt == null)
                 .Skip(page > 1 ? page*limit : 0)
                 .Take(limit).ToListAsync();
 
@@ -157,7 +158,7 @@ namespace Services
 
         public async Task<Output<int>> Count()
         {
-            var result = await _repository.AsQueryable().CountAsync();
+            var result = await _repository.AsQueryable().Where(p => p.DeletedAt == null).CountAsync();
             var output = new Output<int>() { Data = result, StatusCode = 200 };
             output.Messages.Add($"{result} {typeof(DomainType).Name} found.");
             return output;
