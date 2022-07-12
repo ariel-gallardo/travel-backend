@@ -26,14 +26,14 @@ namespace Services
             try
             {
                 await _context.SaveChangesAsync();
-                output.Messages.Add($"{nameof(DomainType)} created successfully.");
+                output.Messages.Add($"{typeof(DomainType).Name} created successfully.");
                 output.StatusCode = 201;
                 output.Data = true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                output.Messages.Add($"{nameof(DomainType)} cannot be created.");
+                output.Messages.Add($"{typeof(DomainType).Name} cannot be created.");
                 output.StatusCode = 422;
                 output.Data = false;
             }
@@ -54,7 +54,7 @@ namespace Services
                 if (entity != null) _repository.Update(entity);
                 await _context.SaveChangesAsync();
 
-                output.Messages.Add($"{nameof(DomainType)} deleted successfully.");
+                output.Messages.Add($"{typeof(DomainType).Name} deleted successfully.");
                 output.StatusCode = 200;
             }
             else
@@ -70,7 +70,7 @@ namespace Services
         {
             var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
             var output = new Output<bool>() { Data = entity != null };
-            output.Messages.Add($"{nameof(DomainType)}{(output.Data ? " " : " not")} found.");
+            output.Messages.Add($"{typeof(DomainType).Name}{(output.Data ? " " : " not")} found.");
             output.StatusCode = output.Data ? 200 : 404;
             return output;
         }
@@ -90,8 +90,17 @@ namespace Services
             pagination.TotalItems = totalItems.Data;
             pagination.TotalPages = totalItems.Data / limit;
 
-            if (result != null)
+            if (result.Count > 0)
+            {
                 pagination.Data = _mapper.Map<List<DomainType>, List<OutputType>>(result);
+                output.StatusCode = 200;
+                output.Messages.Add($"{typeof(DomainType).Name} found.");
+            }
+            else
+            {
+                output.StatusCode = 404;
+                output.Messages.Add($"{typeof(DomainType).Name} not found.");
+            }
 
             output.Data = pagination;
 
@@ -102,7 +111,7 @@ namespace Services
         {
             var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
             var output = new Output<OutputType>();
-            output.Messages.Add($"{nameof(DomainType)}{(output.Data != null ? " " : " not")} found.");
+            output.Messages.Add($"{typeof(DomainType).Name}{(output.Data != null ? " " : " not")} found.");
             output.StatusCode = output.Data != null ? 200 : 404;
             if(entity != null)
                 output.Data = _mapper.Map<DomainType, OutputType>(entity);
@@ -124,14 +133,14 @@ namespace Services
                     await _context.SaveChangesAsync();
                     output.StatusCode = 204;
                     output.Data = true;
-                    output.Messages.Add($"{nameof(DomainType)} updated successfully");
+                    output.Messages.Add($"{typeof(DomainType).Name} updated successfully");
                 }
                 catch(Exception e)
                 {
                     Console.WriteLine(e.Message);
                     output.StatusCode = 501;
                     output.Data = true;
-                    output.Messages.Add($"{nameof(DomainType)} updated failed.");
+                    output.Messages.Add($"{typeof(DomainType).Name} updated failed.");
                 }
             }
             else
@@ -147,8 +156,7 @@ namespace Services
         {
             var result = await _repository.AsQueryable().CountAsync();
             var output = new Output<int>() { Data = result, StatusCode = 200 };
-            output.Messages.Add($"{result} {nameof(DomainType)}.");
-
+            output.Messages.Add($"{result} {typeof(DomainType).Name} found.");
             return output;
         }
     }

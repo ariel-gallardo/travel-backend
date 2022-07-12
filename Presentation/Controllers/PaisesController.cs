@@ -21,7 +21,7 @@ namespace Presentation.Controllers
             return StatusCode(output.StatusCode, output);
         }
 
-        [HttpGet("{page}")]
+        [HttpGet("all/{page}")]
         public async Task<IActionResult> FindAll(int page)
         {
             var output = await _services.FindAll(page, 10);
