@@ -77,16 +77,19 @@ namespace Services
 
         public async Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit)
         {
-            var result = await _repository.AsQueryable().Skip(page*limit).Take(limit).ToListAsync();
             var totalItems = await Count();
+            var result = await _repository
+                .AsQueryable()
+                .Skip(page > 1 ? page*limit : 0)
+                .Take(limit).ToListAsync();
 
             var output = new Output<Pagination<List<OutputType>>>();
             var pagination = new Pagination<List<OutputType>>();
 
             pagination.Page = page;
             pagination.Count = result.Count;
-            pagination.BackPage = page > 1;
-            pagination.NextPage = page < totalItems.Data / limit;
+            pagination.BackPage = page > 1 && pagination.Count > 0;
+            pagination.NextPage = page * limit < totalItems.Data;
             pagination.TotalItems = totalItems.Data;
             pagination.TotalPages = totalItems.Data / limit;
 
