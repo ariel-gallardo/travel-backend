@@ -2,13 +2,14 @@
 
 namespace Interfaces.Services
 {
-    public interface IServices<Input,ResponseType>
+    public interface IServices<InputType,DomainType,OutputType> where DomainType : Models.Domain.Entity 
     {
-        public Task<Output<ResponseType>> Create(Input inputDto);
-        public Task<Output<ResponseType>> Update(Input inputDto);
+        public Task<Output<bool>> Create(InputType inputDto);
+        public Task<Output<bool>> Update(InputType inputDto, long id);
         public Task<Output> Delete(long id);
         public Task<Output<Boolean>> Exists(long id);
-        public Task<Output<ResponseType>> FindById(long id);
-        public Task<Output<Pagination<ResponseType>>> FindAll(long page, long limit);
+        public Task<Output<OutputType>> FindById(long id);
+        public Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit);
+        public Task<Output<int>> Count();
     }
 }

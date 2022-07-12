@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Models.Output
+﻿namespace Models.Output
 {
     public class Pagination<T>
     {
@@ -10,6 +8,6 @@ namespace Models.Output
         public long Page { get; set; }
         public bool NextPage { get; set; }
         public bool BackPage { get; set; }
-        public ICollection<T> List { get; set; }
+        public T Data { get; set; }
     }
 }
