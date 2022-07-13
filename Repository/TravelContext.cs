@@ -45,6 +45,7 @@ namespace Repository
 
         protected override void OnModelCreating(ModelBuilder m)
         {
+
             m.Entity<Viaje>()
                 .HasOne(v => v.CiudadOrigen)
                 .WithMany()

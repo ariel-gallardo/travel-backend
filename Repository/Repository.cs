@@ -18,25 +18,33 @@ namespace Repository
 
         public async Task<bool> Create(DomainType entity)
         {
-            _repository
+            if(entity != null)
+            {
+                _repository
                 .Add(entity);
-            return await _context.SaveChangesAsync() > 0;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
         public async Task<bool> Update(DomainType entity)
         {
-            _repository
+            if(entity != null)
+            {
+                _repository
                 .Update(entity);
-            return await _context.SaveChangesAsync() > 0;
+                return await _context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
         public IQueryable<DomainType> FindById(long id)
         =>
            _repository
-           .Where(p => p.Id == id && p.DeletedAt == null)
-           .AsQueryable();
+            .Where(x => x.DeletedAt == null && x.Id == id)
+            .AsQueryable();
+
         public IQueryable<DomainType> FindAll(int page, int limit)
         =>
              _repository
-                .AsQueryable()
                 .Where(p => p.DeletedAt == null)
                 .Skip(page > 1 ? page * limit : 0)
                 .Take(limit)
@@ -49,17 +57,20 @@ namespace Repository
             .AsQueryable();
         public async Task<bool> SoftDelete(DomainType entity)
         {
-            if (entity.DeletedAt == null)
-            {
-                entity.DeletedAt = System.DateTime.Now.ToUniversalTime();
-                _repository
-                    .Update(entity);
-                return await _context.SaveChangesAsync() > 0;
-            }
+            if (entity != null)
+                if (entity.DeletedAt == null)
+                {
+                    entity.DeletedAt = System.DateTime.Now.ToUniversalTime();
+                    _repository
+                        .Update(entity);
+                    return await _context.SaveChangesAsync() > 0;
+                }
+                else
+                {
+                    return false;
+                }
             else
-            {
                 return false;
-            }
         }
     }
 }

@@ -6,10 +6,10 @@ namespace Services
         {
             public DomainToOutput()
             {
-                CreateMap<Models.Domain.Ciudad, Models.Output.Ciudad>();
+                CreateMap<Models.Domain.Ciudad, Models.Output.Ciudad>()
+                .ForMember(o => o.Pais, opt => opt.MapFrom(d => d.Pais.Nombre));
 
-                CreateMap<Models.Domain.Pais, Models.Output.Pais>()
-                    .ForMember(o => o.Ciudades, opt => opt.Ignore());
+                CreateMap<Models.Domain.Pais, Models.Output.Pais>();
             }
         }
 
