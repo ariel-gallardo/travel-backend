@@ -7,7 +7,9 @@ namespace Services
             public DomainToOutput()
             {
                 CreateMap<Models.Domain.Ciudad, Models.Output.Ciudad>();
-                CreateMap<Models.Domain.Pais,Models.Output.Pais>();
+
+                CreateMap<Models.Domain.Pais, Models.Output.Pais>()
+                    .ForMember(o => o.Ciudades, opt => opt.Ignore());
             }
         }
 

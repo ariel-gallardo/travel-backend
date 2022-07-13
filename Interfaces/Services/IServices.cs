@@ -2,7 +2,7 @@
 
 namespace Interfaces.Services
 {
-    public interface IServices<InputType,DomainType,OutputType> where DomainType : Models.Domain.Entity 
+    public interface IRepository<InputType,DomainType,OutputType> where DomainType : Models.Domain.Entity 
     {
         public Task<Output<bool>> Create(InputType inputDto);
         public Task<Output<bool>> Update(InputType inputDto, long id);
