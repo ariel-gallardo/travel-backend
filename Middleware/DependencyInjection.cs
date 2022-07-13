@@ -7,8 +7,18 @@ namespace Middleware
     {
         public static IServiceCollection AddDependencies(this IServiceCollection services)
         {
-            services.AddTransient<Interfaces.Services.IPaisesServices, Services.PaisesServices>();
-            services.AddTransient<Interfaces.Services.ICiudadesServices, Services.CiudadesServices>();
+            #region 
+            
+            services.AddScoped<Repository.UnitOfWork>();
+            #endregion
+
+            #region Services
+                services.AddTransient<Interfaces.Services.ICiudadesServices, Services.CiudadesServices>();
+                services.AddTransient<Interfaces.Services.IPaisesServices, Services.PaisesServices>();
+            #endregion
+
+
+
             return services;
         }
     }

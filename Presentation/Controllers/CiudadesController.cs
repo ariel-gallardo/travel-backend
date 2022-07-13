@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Presentation.Controllers
 {
     [Route($"api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class CiudadesController : ControllerBase, ControllerMethods<Models.Output.Ciudad, Models.Input.Ciudad>
     {

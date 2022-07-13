@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Interfaces.Repositories;
 using Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using Models.Output;
@@ -6,34 +7,39 @@ using Repository;
 
 namespace Services
 {
-    public class BasicServices<InputType, DomainType, OutputType> : IServices<InputType, DomainType, OutputType> where DomainType : Models.Domain.Entity
+    public class BasicServices<InputType, DomainType, OutputType> : IRepository<InputType, DomainType, OutputType> where DomainType : Models.Domain.Entity
     {
-        public readonly DbSet<DomainType> _repository;
-        private readonly TravelContext _context;
         private readonly IMapper _mapper;
-        public BasicServices(TravelContext context, IMapper mapper)
+        private readonly UnitOfWork _unitOfWork;
+        private readonly dynamic _repository;
+
+        public BasicServices(
+            IMapper mapper,
+            UnitOfWork unitOfWork
+        )
         {
-            var data = typeof(DomainType);
-            this._repository = (DbSet<DomainType>)context.GetDbSet(typeof(DomainType).ToString());
-            this._context = context;
             this._mapper = mapper;
+            this._unitOfWork = unitOfWork;
+            this._repository = _unitOfWork.SelectRepository(typeof(DomainType));
+
         }
 
         public async Task<Output<bool>> Create(InputType inputDto)
         {
-            _repository.Add(_mapper.Map<InputType, DomainType>(inputDto));
+            
             var output = new Output<bool>();
+
             try
             {
-                await _context.SaveChangesAsync();
+                var result = await _repository.Create(_mapper.Map<InputType, DomainType>(inputDto));
                 output.Messages.Add($"{typeof(DomainType).Name} created successfully.");
                 output.StatusCode = 201;
                 output.Data = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 output.Messages.Add($"{typeof(DomainType).Name} cannot be created.");
+                output.Messages.Add(e.Message);
                 output.StatusCode = 400;
                 output.Data = false;
             }
@@ -43,32 +49,25 @@ namespace Services
 
         public async Task<Output> Delete(long id)
         {
-            var exists = await Exists(id);
             var output = new Output();
-            if(exists.StatusCode == 200)
-            {
-                var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
-               
-                if(entity != null) entity.DeletedAt = DateTime.Now.ToUniversalTime();
 
-                if (entity != null) _repository.Update(entity);
-                await _context.SaveChangesAsync();
+            var entity = await _repository.FindById(id);
+            var result = await _repository.SoftDelete(entity);
 
-                output.Messages.Add($"{typeof(DomainType).Name} deleted successfully.");
-                output.StatusCode = 200;
-            }
-            else
-            {
-                output.Messages = exists.Messages;
-                output.StatusCode = exists.StatusCode;
-            }
+            output.Messages.Add(
+               result 
+                ? $"{typeof(DomainType).Name} deleted successfully."
+                : $"{typeof(DomainType).Name} not found."
+            );
+
+            output.StatusCode = result ? 200 : 404;
 
             return output;
         }
 
         public async Task<Output<bool>> Exists(long id)
         {
-            var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
+            var entity = await _repository.FindById(id);
             var output = new Output<bool>() { Data = entity != null };
             output.Messages.Add($"{typeof(DomainType).Name}{(output.Data ? " " : " not")} found.");
             output.StatusCode = output.Data ? 200 : 404;
@@ -78,11 +77,7 @@ namespace Services
         public async Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit)
         {
             var totalItems = await Count();
-            var result = await _repository
-                .AsQueryable()
-                .Where(p => p.DeletedAt == null)
-                .Skip(page > 1 ? page*limit : 0)
-                .Take(limit).ToListAsync();
+            var result = await _repository.FindAll(page, limit);
 
             var output = new Output<Pagination<List<OutputType>>>();
             var pagination = new Pagination<List<OutputType>>();
@@ -113,7 +108,7 @@ namespace Services
 
         public async Task<Output<OutputType>> FindById(long id)
         {
-            var entity = await _repository.Where(p => p.Id == id && p.DeletedAt == null).FirstOrDefaultAsync();
+            var entity = await _repository.FindById(id);
             var output = new Output<OutputType>();
             output.Messages.Add($"{typeof(DomainType).Name}{(entity != null ? "" : " not")} found.");
             output.StatusCode = entity != null ? 200 : 404;
@@ -132,17 +127,14 @@ namespace Services
                 var domainData = _mapper.Map<InputType, DomainType>(inputDto);
                 try
                 {
-                    var toUpdate = await _repository.FirstOrDefaultAsync(d => d.Id == id);
-                    _repository.Update(_mapper.Map(inputDto, domainData));
-                    await _context.SaveChangesAsync();
+                    await _repository.Update(_mapper.Map(inputDto, domainData));
                     output.StatusCode = 204;
                     output.Data = true;
                     output.Messages.Add($"{typeof(DomainType).Name} updated successfully");
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    output.StatusCode = 501;
+                    output.StatusCode = 400;
                     output.Data = true;
                     output.Messages.Add($"{typeof(DomainType).Name} updated failed.");
                 }
@@ -158,7 +150,7 @@ namespace Services
 
         public async Task<Output<int>> Count()
         {
-            var result = await _repository.AsQueryable().Where(p => p.DeletedAt == null).CountAsync();
+            var result = await _repository.Count();
             var output = new Output<int>() { Data = result, StatusCode = 200 };
             output.Messages.Add($"{result} {typeof(DomainType).Name} found.");
             return output;
