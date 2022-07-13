@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Interfaces.Repositories;
 using Interfaces.Services;
-using Microsoft.EntityFrameworkCore;
 using Models.Output;
 using Repository;
 
@@ -87,7 +85,7 @@ namespace Services
             pagination.BackPage = page > 1 && pagination.Count > 0;
             pagination.NextPage = page * limit < totalItems.Data;
             pagination.TotalItems = totalItems.Data;
-            pagination.TotalPages = totalItems.Data / limit;
+            pagination.TotalPages = totalItems.Data / limit > 0 ? totalItems.Data / limit : 1;
 
             if (result.Count > 0)
             {
@@ -109,12 +107,11 @@ namespace Services
         public async Task<Output<OutputType>> FindById(long id)
         {
             var entity = await _repository.FindById(id);
+
             var output = new Output<OutputType>();
             output.Messages.Add($"{typeof(DomainType).Name}{(entity != null ? "" : " not")} found.");
             output.StatusCode = entity != null ? 200 : 404;
-            if(entity != null)
-                output.Data = _mapper.Map<DomainType, OutputType>(entity);
-
+            output.Data = _mapper.Map<DomainType, OutputType>(entity);
             return output;
         }
 

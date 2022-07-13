@@ -12,10 +12,14 @@ namespace Repository
         private readonly TravelContext _context;
         public IRepository<Models.Input.Ciudad, Models.Domain.Ciudad> _repository { get; }
 
-        public CiudadRepository(TravelContext context)
+        private UnitOfWork _unitOfWork;
+
+
+        public CiudadRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
             _repository = new Repository<Models.Input.Ciudad, Models.Domain.Ciudad>(context);
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Create(Ciudad entity)
@@ -35,17 +39,31 @@ namespace Repository
 
         public async Task<Ciudad> FindById(long id)
         {
-            return await _repository.FindById(id).FirstOrDefaultAsync();
+            var ciudad =
+            await _repository
+                .FindById(id)
+                .Include(c => c.Pais)
+                .Where(c => c.Pais.DeletedAt == null)
+                .FirstOrDefaultAsync();
+
+            return ciudad;
         }
 
         public async Task<List<Ciudad>> FindAll(int page, int limit)
         {
-            return await _repository.FindAll(page, limit).ToListAsync();
+            return await _repository
+                .FindAll(page, limit)
+                .Include(p => p.Pais)
+                .Where(c => c.Pais.DeletedAt == null)
+                .ToListAsync();
         }
 
         public async Task<int> Count()
         {
-            return await _repository.Count().CountAsync();
+            return await _repository.Count()
+                .Include(c => c.Pais)
+                .Where(c => c.Pais.DeletedAt == null)
+                .CountAsync();
         }
     }
 }

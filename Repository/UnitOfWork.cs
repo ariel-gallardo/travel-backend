@@ -15,8 +15,8 @@ namespace Repository
         )
         {
             _context = context;
-            CiudadRepository = new CiudadRepository(_context);
-            PaisRepository = new PaisRepository(_context);
+            CiudadRepository = new CiudadRepository(_context,this);
+            PaisRepository = new PaisRepository(_context,this);
         }
 
         public object SelectRepository(System.Type domainType)
