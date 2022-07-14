@@ -8,9 +8,9 @@ namespace Interfaces.Controllers
 
         Task<IActionResult> FindById(long id);
 
-        Task<IActionResult> Create([FromBody] InputType t);
+        Task<IActionResult> Create([FromForm] InputType t);
 
-        Task<IActionResult> Update([FromBody] InputType t, long id);
+        Task<IActionResult> Update([FromForm] InputType t, long id);
 
         Task<IActionResult> LogicDelete(long id);
     }

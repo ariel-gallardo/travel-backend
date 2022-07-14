@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using System.Reflection;
@@ -21,7 +23,22 @@ namespace Presentation
             {
                 opt.UseSqlServer(_configuration.GetConnectionString("TravelConnection"));
             });
-            services.AddControllers();
+
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+
+            services.AddControllers()
+            .ConfigureApiBehaviorOptions(opt =>
+            {
+                opt.InvalidModelStateResponseFactory = context =>
+                {
+                    var output = new Models.Output.Output()
+                    {
+                        Messages = context.ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList(),
+                        StatusCode = StatusCodes.Status400BadRequest
+                    };
+                    return new BadRequestObjectResult(output);
+                };
+            });
             services.AddScoped<DbContext, TravelContext>();
             ConfigMapper(services);
             Middleware.DependencyInjection.AddDependencies(services);
@@ -58,6 +75,7 @@ namespace Presentation
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(e => e.MapControllers());
+            app.UseMvc();
         }
     }
 }
