@@ -9,7 +9,7 @@ namespace Models.Domain
         public virtual Ciudad CiudadDestino { get; set; }
         public virtual Vehiculo VehiculoAsignado { get; set; }
         public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
+        public DateTime? FechaFin { get; set; } = null;
         public virtual ICollection<EstadoViaje> EstadoViaje { get; set; } = new List<EstadoViaje>();
 
         #region ForeingKeys

@@ -21,7 +21,7 @@ namespace Services
                 .ForMember(o => o.CiudadOrigen, opt => opt.MapFrom(d => d.CiudadOrigen.Nombre))
                 .ForMember(o => o.CiudadDestino, opt => opt.MapFrom(d => d.CiudadDestino.Nombre))
                 .ForMember(o => o.FechaInicio, opt => opt.MapFrom(d => d.FechaInicio.ToLocalTime().ToString()))
-                .ForMember(o => o.FechaFin, opt => opt.MapFrom(d => d.FechaFin.ToLocalTime().ToString()));
+                .ForMember(o => o.FechaFin, opt => opt.MapFrom(d => d.FechaFin.Value.ToLocalTime().ToString()));
         }
     }
 
@@ -33,6 +33,7 @@ namespace Services
                 CreateMap<Models.Input.Pais, Models.Domain.Pais>();
                 CreateMap<Models.Input.Vehiculo, Models.Domain.Vehiculo>();
                 CreateMap<Models.Input.Viaje, Models.Domain.Viaje>();
-            }
+                CreateMap<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo>();
+        }
         }
 }
