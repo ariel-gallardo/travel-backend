@@ -58,6 +58,7 @@ namespace Presentation
                 cfg.ClearPrefixes();
                 cfg.AddProfile(new Services.DomainToOutput());
                 cfg.AddProfile(new Services.InputToDomain());
+                cfg.AddProfile(new Services.ExternalDomainToDomain());
             });
 
             var mapper = config.CreateMapper();

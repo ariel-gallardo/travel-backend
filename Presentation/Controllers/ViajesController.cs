@@ -36,6 +36,9 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] Models.Input.Viaje t)
         {
+            var pronostico = await _services.TiempoFavorable(t);
+            if (!pronostico.Data)
+                return StatusCode(pronostico.StatusCode, pronostico);
             var output = await _services.Viajar(t);
             return StatusCode(output.StatusCode, output);
         }
