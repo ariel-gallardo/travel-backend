@@ -21,7 +21,12 @@ namespace Services
                 .ForMember(o => o.CiudadOrigen, opt => opt.MapFrom(d => d.CiudadOrigen.Nombre))
                 .ForMember(o => o.CiudadDestino, opt => opt.MapFrom(d => d.CiudadDestino.Nombre))
                 .ForMember(o => o.FechaInicio, opt => opt.MapFrom(d => d.FechaInicio.ToLocalTime().ToString()))
-                .ForMember(o => o.FechaFin, opt => opt.MapFrom(d => d.FechaFin.ToLocalTime().ToString()));
+                .ForMember(o => o.FechaFin, opt => opt.MapFrom(d => d.FechaFin.Value.ToLocalTime().ToString()));
+
+                CreateMap<Models.Domain.Pronostico, Models.Output.Pronostico>()
+                .ForMember(o => o.Pais, opt => opt.Ignore())
+                .ForMember(o => o.Estado, opt => opt.MapFrom(d => d.Descripcion))
+                .ForMember(o => o.Ciudad, opt => opt.MapFrom(d => d.Ciudad.Nombre));
         }
     }
 
@@ -33,6 +38,19 @@ namespace Services
                 CreateMap<Models.Input.Pais, Models.Domain.Pais>();
                 CreateMap<Models.Input.Vehiculo, Models.Domain.Vehiculo>();
                 CreateMap<Models.Input.Viaje, Models.Domain.Viaje>();
+                CreateMap<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo>();
+            }
+        }
+
+        public class ExternalDomainToDomain : Profile
+        {
+            public ExternalDomainToDomain()
+            {
+                CreateMap<Models.Domain.ExternalPronostico, Models.Domain.Pronostico>()
+                .ForMember(o => o.Ciudad, opt => opt.Ignore())
+                .ForMember(o => o.Descripcion, opt => opt.MapFrom(d => d.Weather.Last().Main))
+                .ForMember(o => o.DiaSolicitado, opt => opt.Ignore())
+                .ForMember(o => o.CiudadId, opt => opt.Ignore());
             }
         }
 }

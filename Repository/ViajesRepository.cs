@@ -35,6 +35,12 @@ namespace Repository
         {
             return await _repository
                 .FindAll(page, limit)
+                .Include(v => v.CiudadOrigen)
+                .ThenInclude(c => c.Pais)
+                .Include(v => v.CiudadDestino)
+                .ThenInclude(c => c.Pais)
+                .Include(v => v.VehiculoAsignado)
+                .ThenInclude(v => v.Tipo)
                 .ToListAsync();
         }
 
@@ -42,6 +48,12 @@ namespace Repository
         {
             return await _repository
                 .FindById(id)
+                .Include(v => v.CiudadOrigen)
+                .ThenInclude(c => c.Pais)
+                .Include(v => v.CiudadDestino)
+                .ThenInclude(c => c.Pais)
+                .Include(v => v.VehiculoAsignado)
+                .ThenInclude(v => v.Tipo)
                 .FirstOrDefaultAsync();
         }
 
