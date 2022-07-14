@@ -57,5 +57,32 @@ namespace Repository
         {
             return await _repository.Update(entity);
         }
+
+        public async Task<bool> ItsBusy(long id)
+        {
+            var vehicle = await _repository.FindById(id).FirstOrDefaultAsync();
+            if (vehicle == null)
+                return true;
+            else
+                return vehicle.ItsBusy;
+        }
+
+        public async Task<bool> UseVehicle(long id)
+        {
+            var vehicle = await _repository.FindById(id).FirstOrDefaultAsync();
+            if (vehicle == null)
+                return false;
+            else
+            {
+                if (vehicle.ItsBusy)
+                    return false;
+                else
+                {
+                    vehicle.ItsBusy = !vehicle.ItsBusy;
+                    _context.Update(vehicle);
+                    return await _context.SaveChangesAsync() > 0;
+                }
+            }
+        }
     }
 }

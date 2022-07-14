@@ -5,6 +5,7 @@ namespace Models.Domain
     [Index(nameof(Patente), IsUnique = true)]
     public class Vehiculo : Entity
     {
+        public bool ItsBusy { get; set; } = false;
         public string Patente { get; set; }
         public string Marca { get; set; }
         public string Modelo { get; set; }

@@ -7,9 +7,9 @@ namespace Services
 {
     public class BasicServices<InputType, DomainType, OutputType> : IRepository<InputType, DomainType, OutputType> where DomainType : Models.Domain.Entity
     {
-        private readonly IMapper _mapper;
-        private readonly UnitOfWork _unitOfWork;
-        private readonly dynamic _repository;
+        public readonly IMapper _mapper;
+        public readonly UnitOfWork _unitOfWork;
+        public readonly dynamic _repository;
 
         public BasicServices(
             IMapper mapper,
