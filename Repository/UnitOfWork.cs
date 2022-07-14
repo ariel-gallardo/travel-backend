@@ -8,6 +8,7 @@ namespace Repository
         #region Repositories
         public  ICiudadRepository CiudadRepository { get; }
         public  IPaisRepository PaisRepository { get; }
+        public  ITiposVehiculoRepository TiposVehiculoRepository { get; }
         #endregion
 
         public UnitOfWork(
@@ -17,6 +18,7 @@ namespace Repository
             _context = context;
             CiudadRepository = new CiudadRepository(_context,this);
             PaisRepository = new PaisRepository(_context,this);
+            TiposVehiculoRepository = new TiposVehiculoRepository(_context, this);
         }
 
         public object SelectRepository(System.Type domainType)
@@ -25,6 +27,8 @@ namespace Repository
                 return CiudadRepository;
             if (typeof(Models.Domain.Pais) == domainType)
                 return PaisRepository;
+            if (typeof(Models.Domain.TipoVehiculo) == domainType)
+                return TiposVehiculoRepository;
             return null;
         }
     }
