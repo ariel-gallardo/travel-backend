@@ -13,8 +13,10 @@ namespace Middleware
             #endregion
 
             #region Services
+                services.AddTransient<Interfaces.Services.ITiposVehiculoServices, Services.TiposVehiculoServices>();
                 services.AddTransient<Interfaces.Services.ICiudadesServices, Services.CiudadesServices>();
                 services.AddTransient<Interfaces.Services.IPaisesServices, Services.PaisesServices>();
+                services.AddTransient<Interfaces.Services.IVehiculosServices, Services.VehiculoServices>();
             #endregion
 
 
