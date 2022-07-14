@@ -14,7 +14,7 @@
             public override bool IsValid(object value)
             {
                 var dt = (DateTime)value;
-                var dtMax = dt.AddDays(10);
+                var dtMax = DateTime.Now.AddDays(10);
 
                 if (dt >= DateTime.Now && dt <= dtMax)
                 {
