@@ -32,12 +32,20 @@ namespace Repository
 
         public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit)
         {
-            return await _repository.FindAll(page, limit).ToListAsync();
+            return await _repository
+                .FindAll(page, limit)
+                .Include(v => v.Tipo)
+                .Where(v => v.Tipo.DeletedAt == null)
+                .ToListAsync();
         }
 
         public async Task<Models.Domain.Vehiculo> FindById(long id)
         {
-            return await _repository.FindById(id).FirstOrDefaultAsync();
+            return await _repository
+                .FindById(id)
+                .Include(v => v.Tipo)
+                .Where(v => v.Tipo.DeletedAt == null)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> SoftDelete(Models.Domain.Vehiculo entity)
