@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] Models.Input.Viaje t)
         {
-            var output = await _services.Create(t);
+            var output = await _services.Viajar(t);
             return StatusCode(output.StatusCode, output);
         }
 

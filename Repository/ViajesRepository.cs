@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Models.Domain;
 
 namespace Repository
 {
@@ -52,6 +53,13 @@ namespace Repository
         public async Task<bool> Update(Models.Domain.Viaje entity)
         {
             return await _repository.Update(entity);
+        }
+
+        public async Task<bool> CanTravelToCity(Viaje entity)
+        {
+            var cOrigen = await _unitOfWork.CiudadRepository.FindById(entity.CiudadOrigenId);
+            var cDestino = await _unitOfWork.CiudadRepository.FindById(entity.CiudadDestinoId);
+            return cOrigen != null && cDestino != null;
         }
     }
 }
