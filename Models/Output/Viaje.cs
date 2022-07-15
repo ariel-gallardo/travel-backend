@@ -2,6 +2,7 @@
 {
     public class Viaje
     {
+        public long Id { get; set; }
         public string PaisOrigen { get; set; }
         public string PaisDestino { get; set; }
         public string CiudadOrigen { get; set; }
