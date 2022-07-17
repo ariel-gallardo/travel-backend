@@ -20,7 +20,7 @@ namespace Models.Input
         [Range(1, long.MaxValue,ErrorMessage = "Debe asignar un vehiculo.")]
         public long VehiculoId { get; set; }
 
-        [Required(ErrorMessage = "Debe asignar una fecha de inicio.")]
+        [Required(ErrorMessage = "Debe asignar una fecha de inicio.",ErrorMessageResourceType = typeof(DateTime))]
         [CustomDate(ErrorMessage = "El viaje debe estar entre la fecha actual y a 10 dias como maximo.")]
         public DateTime FechaInicio { get; set; }
     }
