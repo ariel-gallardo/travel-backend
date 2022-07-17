@@ -1,5 +1,6 @@
 ﻿using Interfaces.Controllers;
 using Interfaces.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Output;
@@ -100,7 +101,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Output<bool>), StatusCodes.Status404NotFound)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> LogicDelete( long id)
+        public async Task<IActionResult> LogicDelete(long id)
         {
             var output = await _services.Delete(id);
             return StatusCode(output.StatusCode, output);

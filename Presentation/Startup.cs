@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Repository;
+using System.Configuration;
 using System.Reflection;
-
+using CustomSettings;
 namespace Presentation
 {
     public class Startup
     {
         #region props
         private readonly IConfiguration _configuration;
+        public Cors CorsSettings { get; set; }
+        public Database DatabaseSettings { get; set; }
         #endregion props
         public Startup(IConfiguration configuration)
         {
@@ -19,9 +22,33 @@ namespace Presentation
 
         public void ConfigureServices(IServiceCollection services)
         {
+            DatabaseSettings = new Database();
+            CorsSettings = new Cors();
+
+            var sDatabase = _configuration.GetSection("Database");
+            var sOpenWeather = _configuration.GetSection("OpenWeather");
+            var sCors = _configuration.GetSection("Cors");
+
+            DatabaseSettings = sDatabase.Get<Database>();
+            CorsSettings = sCors.Get<Cors>();
+
+            services.Configure<Database>(sDatabase);
+            services.Configure<OpenWeather>(sOpenWeather);
+            services.Configure<Cors>(sCors);
+
             services.AddDbContext<TravelContext>(opt =>
             {
-                opt.UseSqlServer(_configuration.GetConnectionString("TravelConnection"));
+                opt.UseSqlServer(DatabaseSettings.ConnectionString);
+            });
+
+            services.AddCors(setup =>
+            {
+                setup.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.WithOrigins(CorsSettings.DomainToAllow)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
             });
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
@@ -72,11 +99,13 @@ namespace Presentation
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(e => e.MapControllers());
             app.UseMvc();
+
         }
     }
 }
