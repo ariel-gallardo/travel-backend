@@ -1,4 +1,6 @@
-﻿namespace Interfaces.Repositories
+﻿using Models.Domain;
+
+namespace Interfaces.Repositories
 {
     public interface IRepository<InputType,DomainType> where DomainType : Models.Domain.Entity 
     {

@@ -2,14 +2,14 @@
 
 namespace Interfaces.Services
 {
-    public interface IRepository<InputType,DomainType,OutputType> where DomainType : Models.Domain.Entity 
+    public interface IRepository<InputType,DomainType,OutputType, FilterType> where DomainType : Models.Domain.Entity 
     {
         public Task<Output<bool>> Create(InputType inputDto);
         public Task<Output<bool>> Update(InputType inputDto, long id);
         public Task<Output> Delete(long id);
         public Task<Output<Boolean>> Exists(long id);
         public Task<Output<OutputType>> FindById(long id);
-        public Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit);
+        public Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit, bool useFilter, FilterType fModel);
         public Task<Output<int>> Count();
     }
 }

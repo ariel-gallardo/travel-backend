@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Interfaces.Repositories;
+using System;
+using Models.Domain;
 
 namespace Repository
 {
@@ -18,7 +20,7 @@ namespace Repository
 
         public async Task<bool> Create(DomainType entity)
         {
-            if(entity != null)
+            if (entity != null)
             {
                 _repository
                 .Add(entity);
@@ -28,7 +30,7 @@ namespace Repository
         }
         public async Task<bool> Update(DomainType entity)
         {
-            if(entity != null)
+            if (entity != null)
             {
                 _repository
                 .Update(entity);
@@ -44,11 +46,13 @@ namespace Repository
 
         public IQueryable<DomainType> FindAll(int page, int limit)
         =>
-             _repository
+            _repository
                 .Where(p => p.DeletedAt == null)
                 .Skip(page > 1 ? page * limit : 0)
                 .Take(limit)
                 .AsQueryable();
+
+
         public IQueryable<DomainType> Count()
         =>
           _repository

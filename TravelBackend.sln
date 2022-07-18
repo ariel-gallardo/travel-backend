@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{B6BF9816-BE29-4E2C-AD6A-FF12DBA9B7C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Middleware", "Middleware\Middleware.csproj", "{2CB99979-C142-420B-8C81-82B204213C89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Middleware", "Middleware\Middleware.csproj", "{2CB99979-C142-420B-8C81-82B204213C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configurations", "Configurations\Configurations.csproj", "{CAAC2C73-6951-45AA-81F2-034105056CD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{2CB99979-C142-420B-8C81-82B204213C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CB99979-C142-420B-8C81-82B204213C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CB99979-C142-420B-8C81-82B204213C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAAC2C73-6951-45AA-81F2-034105056CD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAAC2C73-6951-45AA-81F2-034105056CD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAAC2C73-6951-45AA-81F2-034105056CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAAC2C73-6951-45AA-81F2-034105056CD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,12 @@
+{
+  "Database": {
+    "ConnectionString": "Data Source=CustomHost\\SQLEXPRESS;Initial Catalog=CustomDB;User Id=CustomUserDB;Password=CustomPasswordDB"
+  },
+  "Cors": {
+    "DomainToAllow": "http://localhost:4200"
+  },
+  "OpenWeather": {
+    "ApiKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "Url": "https://api.openweathermap.org/data/2.5/weather"
+  }
+}

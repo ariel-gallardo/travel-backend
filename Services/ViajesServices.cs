@@ -2,10 +2,10 @@
 using Interfaces.Services;
 using Models.Input;
 using Repository;
-
+using Models.Filter;
 namespace Services
 {
-    public class ViajesServices : BasicServices<Models.Input.Viaje, Models.Domain.Viaje, Models.Output.Viaje>, Interfaces.Services.IViajesServices
+    public class ViajesServices : BasicServices<Models.Input.Viaje, Models.Domain.Viaje, Models.Output.Viaje, ViajesFilter>, Interfaces.Services.IViajesServices
     {
         private readonly IPronosticoServices _pronosticoServices;
 

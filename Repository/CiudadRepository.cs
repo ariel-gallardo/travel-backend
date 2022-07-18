@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Models.Filter;
 namespace Repository
 {
     public class CiudadRepository : ICiudadRepository
@@ -49,13 +49,14 @@ namespace Repository
             return ciudad;
         }
 
-        public async Task<List<Ciudad>> FindAll(int page, int limit)
+        public async Task<List<Ciudad>> FindAll(int page, int limit, bool useFilter, CiudadesFilter fModel)
         {
-            return await _repository
+            var query = _repository
                 .FindAll(page, limit)
                 .Include(p => p.Pais)
-                .Where(c => c.Pais.DeletedAt == null)
-                .ToListAsync();
+                .Where(c => c.Pais.DeletedAt == null);
+
+            return await Filter(useFilter,fModel,query).ToListAsync();
         }
 
         public async Task<int> Count()
@@ -64,6 +65,11 @@ namespace Repository
                 .Include(c => c.Pais)
                 .Where(c => c.Pais.DeletedAt == null)
                 .CountAsync();
+        }
+
+        public IQueryable<Ciudad> Filter(bool useFilter, CiudadesFilter fModel, IQueryable<Ciudad> query)
+        {
+            return query;
         }
     }
 }

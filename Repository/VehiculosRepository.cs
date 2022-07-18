@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Models.Filter;
+using Models.Domain;
 
 namespace Repository
 {
@@ -30,13 +32,14 @@ namespace Repository
             return await _repository.Create(entity);
         }
 
-        public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit)
+        public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit, bool useFilter, VehiculosFilter fModel)
         {
-            return await _repository
+            var query = _repository
                 .FindAll(page, limit)
                 .Include(v => v.Tipo)
-                .Where(v => v.Tipo.DeletedAt == null)
-                .ToListAsync();
+                .Where(v => v.Tipo.DeletedAt == null);
+                
+            return await Filter(useFilter,fModel,query).ToListAsync();
         }
 
         public async Task<Models.Domain.Vehiculo> FindById(long id)
@@ -83,6 +86,24 @@ namespace Repository
                     return await _context.SaveChangesAsync() > 0;
                 }
             }
+        }
+
+        public async Task<bool> FreeVehicle(long id)
+        {
+            var vehicle = await FindById(id);
+            if (vehicle.ItsBusy)
+            {
+                vehicle.ItsBusy = false;
+                await _repository.Update(vehicle);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public IQueryable<Vehiculo> Filter(bool useFilter, VehiculosFilter fModel, IQueryable<Vehiculo> query)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

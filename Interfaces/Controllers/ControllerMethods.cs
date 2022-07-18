@@ -2,9 +2,9 @@
 
 namespace Interfaces.Controllers
 {
-    public interface ControllerMethods<OutputType, InputType>
+    public interface ControllerMethods<OutputType, InputType, FilterModel>
     {
-        Task<IActionResult> FindAll(int page);
+        Task<IActionResult> FindAll(int page, [FromQuery] FilterModel fModel, [FromQuery] bool useFilter = false);
 
         Task<IActionResult> FindById(long id);
 

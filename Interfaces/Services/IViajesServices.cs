@@ -1,6 +1,7 @@
 ﻿namespace Interfaces.Services
 {
-    public interface IViajesServices : IRepository<Models.Input.Viaje, Models.Domain.Viaje, Models.Output.Viaje>
+    using Models.Filter;
+    public interface IViajesServices : IRepository<Models.Input.Viaje, Models.Domain.Viaje, Models.Output.Viaje, ViajesFilter>
     {
         public Task<Models.Output.Output<bool>> Viajar(Models.Input.Viaje viaje);
         public Task<Models.Output.Output<bool>> ReprogramarViaje(Models.Input.Viaje viaje);
