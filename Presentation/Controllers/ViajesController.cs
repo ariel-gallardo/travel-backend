@@ -1,16 +1,15 @@
 ﻿using Interfaces.Controllers;
 using Interfaces.Services;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Output;
+using Models.Filter;
 
 namespace Presentation.Controllers
 {
     [Route($"api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class ViajesController : ControllerBase, ControllerMethods<Viaje, Models.Input.Viaje>
+    public class ViajesController : ControllerBase, ControllerMethods<Viaje, Models.Input.Viaje, ViajesFilter>
     {
         private readonly IViajesServices _services;
         public ViajesController(IViajesServices services)
@@ -59,9 +58,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Output<bool>), StatusCodes.Status404NotFound)]
         [HttpGet("all/{page}")]
-        public async Task<IActionResult> FindAll( int page)
+        public async Task<IActionResult> FindAll( int page, [FromQuery] bool useFilter, [FromQuery] ViajesFilter fModel)
         {
-            var output = await _services.FindAll(page, 10);
+            var output = await _services.FindAll(page, 10, useFilter, fModel);
             return StatusCode(output.StatusCode, output);
         }
 

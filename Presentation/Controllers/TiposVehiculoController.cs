@@ -1,13 +1,14 @@
 ﻿using Interfaces.Controllers;
 using Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models.Filter;
 
 namespace Presentation.Controllers
 {
     [Route($"api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class TiposVehiculoController : ControllerBase, ControllerMethods<Models.Output.TipoVehiculo, Models.Input.TipoVehiculo>
+    public class TiposVehiculoController : ControllerBase, ControllerMethods<Models.Output.TipoVehiculo, Models.Input.TipoVehiculo, TiposVehiculoFilter>
     {
         private readonly ITiposVehiculoServices _services;
         public TiposVehiculoController(ITiposVehiculoServices services)
@@ -52,9 +53,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpGet("all/{page}")]
-        public async Task<IActionResult> FindAll(int page)
+        public async Task<IActionResult> FindAll(int page, [FromQuery] bool useFilter, [FromQuery] TiposVehiculoFilter fModel)
         {
-            var output = await _services.FindAll(page, 10);
+            var output = await _services.FindAll(page, 10, useFilter, fModel);
             return StatusCode(output.StatusCode, output);
         }
 

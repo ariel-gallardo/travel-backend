@@ -1,13 +1,14 @@
 ﻿using Interfaces.Controllers;
 using Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
+using Models.Filter;
 
 namespace Presentation.Controllers
 {
     [Route($"api/[controller]")]
     [Produces("application/json")]
     [ApiController]
-    public class CiudadesController : ControllerBase, ControllerMethods<Models.Output.Ciudad, Models.Input.Ciudad>
+    public class CiudadesController : ControllerBase, ControllerMethods<Models.Output.Ciudad, Models.Input.Ciudad, CiudadesFilter>
     {
         private readonly ICiudadesServices _services;
         public CiudadesController(ICiudadesServices services)
@@ -52,9 +53,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpGet("all/{page}")]
-        public async Task<IActionResult> FindAll(int page)
+        public async Task<IActionResult> FindAll(int page, [FromQuery] bool useFilter, [FromQuery] CiudadesFilter fModel)
         {
-            var output = await _services.FindAll(page, 10);
+            var output = await _services.FindAll(page, 10,useFilter, fModel);
             return StatusCode(output.StatusCode, output);
         }
 

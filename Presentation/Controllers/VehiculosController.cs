@@ -1,12 +1,14 @@
-﻿using Interfaces.Services;
+﻿using Interfaces.Controllers;
+using Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Filter;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VehiculosController : ControllerBase
+    public class VehiculosController : ControllerBase, ControllerMethods<Models.Output.Vehiculo, Models.Input.Vehiculo, VehiculosFilter>
     {
         private readonly IVehiculosServices _services;
         public VehiculosController(IVehiculosServices services)
@@ -50,9 +52,9 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpGet("all/{page}")]
-        public async Task<IActionResult> FindAll(int page)
+        public async Task<IActionResult> FindAll(int page, [FromQuery] bool useFilter, [FromQuery] VehiculosFilter fModel)
         {
-            var output = await _services.FindAll(page, 10);
+            var output = await _services.FindAll(page, 10, useFilter, fModel);
             return StatusCode(output.StatusCode, output);
         }
 
