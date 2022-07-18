@@ -87,10 +87,10 @@ namespace Repository
         {
             if (useFilter)
             {
-                if (fModel.IsRango)
+                if (fModel.IsRango && fModel.FechaFinal != null && fModel.FechaInicial != null)
                     query = query.Where(v => 
-                        v.FechaInicio >= fModel.FechaInicial
-                        && v.FechaInicio <= fModel.FechaFinal
+                        v.FechaInicio >= fModel.FechaInicial.Value
+                        && v.FechaInicio <= fModel.FechaFinal.Value
                     ).AsQueryable();
 
                 if (fModel.IsTipo)
