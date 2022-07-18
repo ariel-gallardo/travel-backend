@@ -4,19 +4,21 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Models.Filter;
+using Models.Domain;
+
 namespace Repository
 {
     public class VehiculosRepository : IVehiculosRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Vehiculo, Models.Domain.Vehiculo, VehiculosFilter> _repository { get; }
+        public IRepository<Models.Input.Vehiculo, Models.Domain.Vehiculo> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public VehiculosRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Vehiculo, Models.Domain.Vehiculo, VehiculosFilter>(_context);
+            _repository = new Repository<Models.Input.Vehiculo, Models.Domain.Vehiculo>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -32,11 +34,12 @@ namespace Repository
 
         public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit, bool useFilter, VehiculosFilter fModel)
         {
-            return await _repository
-                .FindAll(page, limit, useFilter, fModel)
+            var query = _repository
+                .FindAll(page, limit)
                 .Include(v => v.Tipo)
-                .Where(v => v.Tipo.DeletedAt == null)
-                .ToListAsync();
+                .Where(v => v.Tipo.DeletedAt == null);
+                
+            return await Filter(useFilter,fModel,query).ToListAsync();
         }
 
         public async Task<Models.Domain.Vehiculo> FindById(long id)
@@ -96,6 +99,11 @@ namespace Repository
                 return true;
             }
             return false;
+        }
+
+        public IQueryable<Vehiculo> Filter(bool useFilter, VehiculosFilter fModel, IQueryable<Vehiculo> query)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

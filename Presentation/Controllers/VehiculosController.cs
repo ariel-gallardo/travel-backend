@@ -52,7 +52,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpGet("all/{page}")]
-        public async Task<IActionResult> FindAll(int page, [FromQuery] bool useFilter, [FromQuery] VehiculosFilter fModel)
+        public async Task<IActionResult> FindAll(int page, [FromQuery] VehiculosFilter fModel, [FromQuery] bool useFilter)
         {
             var output = await _services.FindAll(page, 10, useFilter, fModel);
             return StatusCode(output.StatusCode, output);

@@ -9,5 +9,6 @@ namespace Interfaces.Repositories
         public Task<DomainType> FindById(long id);
         public Task<List<DomainType>> FindAll(int page, int limit, bool useFilter, FilterType fModel);
         public Task<int> Count();
+        public IQueryable<DomainType> Filter(bool useFilter, FilterType fModel, IQueryable<DomainType> query);
     }
 }

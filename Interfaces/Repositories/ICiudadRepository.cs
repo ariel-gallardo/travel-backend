@@ -3,6 +3,6 @@
     using Models.Filter;
     public interface ICiudadRepository: IRepositoryMethods<Models.Domain.Ciudad, CiudadesFilter>
     {
-        public IRepository<Models.Input.Ciudad, Models.Domain.Ciudad, CiudadesFilter> _repository { get; }
+        public IRepository<Models.Input.Ciudad, Models.Domain.Ciudad> _repository { get; }
     }
 }

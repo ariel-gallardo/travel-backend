@@ -10,14 +10,14 @@ namespace Repository
     public class PaisRepository : IPaisRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Pais, Models.Domain.Pais, PaisesFilter> _repository { get; }
+        public IRepository<Models.Input.Pais, Models.Domain.Pais> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public PaisRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Pais, Models.Domain.Pais, PaisesFilter>(_context);
+            _repository = new Repository<Models.Input.Pais, Models.Domain.Pais>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -47,18 +47,22 @@ namespace Repository
 
         public async Task<List<Pais>> FindAll(int page, int limit, bool useFilter, PaisesFilter fModel)
         {
-            var result =  await _repository
-                .FindAll(page, limit, useFilter, fModel)
+            var query = _repository
+                .FindAll(page, limit)
                 .Include(p => p.Ciudades)
-                .Where(p => p.Ciudades.All(c => c.DeletedAt == null && p.Id == c.PaisId))
-                .ToListAsync();
+                .Where(p => p.Ciudades.All(c => c.DeletedAt == null && p.Id == c.PaisId));
 
-            return result;
+            return await Filter(useFilter,fModel, query).ToListAsync(); ;
         }
 
         public async Task<int> Count()
         {
             return await _repository.Count().CountAsync();
+        }
+
+        public IQueryable<Pais> Filter(bool useFilter, PaisesFilter fModel, IQueryable<Pais> query)
+        {
+            return query;
         }
     }
 }
