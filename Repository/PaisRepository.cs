@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Models.Filter;
 namespace Repository
 {
     public class PaisRepository : IPaisRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Pais, Models.Domain.Pais> _repository { get; }
+        public IRepository<Models.Input.Pais, Models.Domain.Pais, PaisesFilter> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public PaisRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Pais, Models.Domain.Pais>(_context);
+            _repository = new Repository<Models.Input.Pais, Models.Domain.Pais, PaisesFilter>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -45,15 +45,11 @@ namespace Repository
               .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Pais>> FindAll(int page, int limit)
+        public async Task<List<Pais>> FindAll(int page, int limit, bool useFilter, PaisesFilter fModel)
         {
-            var query =  _repository
-                .FindAll(page, limit)
-                .Include(p => p.Ciudades);
-
-                await query.LoadAsync();
-                
-            var result = await query
+            var result =  await _repository
+                .FindAll(page, limit, useFilter, fModel)
+                .Include(p => p.Ciudades)
                 .Where(p => p.Ciudades.All(c => c.DeletedAt == null && p.Id == c.PaisId))
                 .ToListAsync();
 

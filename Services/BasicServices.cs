@@ -5,7 +5,7 @@ using Repository;
 
 namespace Services
 {
-    public class BasicServices<InputType, DomainType, OutputType> : IRepository<InputType, DomainType, OutputType> where DomainType : Models.Domain.Entity
+    public class BasicServices<InputType, DomainType, OutputType, FilterType> : IRepository<InputType, DomainType, OutputType, FilterType> where DomainType : Models.Domain.Entity
     {
         public readonly IMapper _mapper;
         public readonly UnitOfWork _unitOfWork;
@@ -72,10 +72,10 @@ namespace Services
             return output;
         }
 
-        public async Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit)
+        public async Task<Output<Pagination<List<OutputType>>>> FindAll(int page, int limit, bool useFilter, FilterType fModel)
         {
             var totalItems = await Count();
-            var result = await _repository.FindAll(page, limit);
+            var result = await _repository.FindAll(page, limit, useFilter, fModel);
 
             var output = new Output<Pagination<List<OutputType>>>();
             var pagination = new Pagination<List<OutputType>>();

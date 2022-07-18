@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Models.Filter;
 namespace Repository
 {
     public class VehiculosRepository : IVehiculosRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Vehiculo, Models.Domain.Vehiculo> _repository { get; }
+        public IRepository<Models.Input.Vehiculo, Models.Domain.Vehiculo, VehiculosFilter> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public VehiculosRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Vehiculo, Models.Domain.Vehiculo>(_context);
+            _repository = new Repository<Models.Input.Vehiculo, Models.Domain.Vehiculo, VehiculosFilter>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -30,10 +30,10 @@ namespace Repository
             return await _repository.Create(entity);
         }
 
-        public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit)
+        public async Task<List<Models.Domain.Vehiculo>> FindAll(int page, int limit, bool useFilter, VehiculosFilter fModel)
         {
             return await _repository
-                .FindAll(page, limit)
+                .FindAll(page, limit, useFilter, fModel)
                 .Include(v => v.Tipo)
                 .Where(v => v.Tipo.DeletedAt == null)
                 .ToListAsync();
@@ -83,6 +83,19 @@ namespace Repository
                     return await _context.SaveChangesAsync() > 0;
                 }
             }
+        }
+
+        public async Task<bool> FreeVehicle(long id)
+        {
+            var vehicle = await FindById(id);
+            if (vehicle.ItsBusy)
+            {
+                vehicle.ItsBusy = false;
+                await _repository.Update(vehicle);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

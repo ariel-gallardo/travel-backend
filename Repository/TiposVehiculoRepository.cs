@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Models.Filter;
 namespace Repository
 {
     public class TiposVehiculoRepository : ITiposVehiculoRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo> _repository { get; }
+        public IRepository<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo, TiposVehiculoFilter> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public TiposVehiculoRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo>(_context);
+            _repository = new Repository<Models.Input.TipoVehiculo, Models.Domain.TipoVehiculo, TiposVehiculoFilter>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -30,10 +30,10 @@ namespace Repository
             return await _repository.Create(entity);
         }
 
-        public async Task<List<Models.Domain.TipoVehiculo>> FindAll(int page, int limit)
+        public async Task<List<Models.Domain.TipoVehiculo>> FindAll(int page, int limit, bool useFilter, TiposVehiculoFilter fModel)
         {
             return await _repository
-                .FindAll(page, limit)
+                .FindAll(page, limit, useFilter, fModel)
                 .Include(tv => tv.Vehiculos)
                 .Where(tv => tv.Vehiculos.All(v => v.DeletedAt == null))
                 .ToListAsync();

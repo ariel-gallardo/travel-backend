@@ -4,20 +4,20 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Models.Domain;
-
+using Models.Filter;
 namespace Repository
 {
     public class ViajesRepository : IViajesRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Viaje, Models.Domain.Viaje> _repository { get; }
+        public IRepository<Models.Input.Viaje, Models.Domain.Viaje, ViajesFilter> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
         public ViajesRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Viaje, Models.Domain.Viaje>(_context);
+            _repository = new Repository<Models.Input.Viaje, Models.Domain.Viaje, ViajesFilter>(_context);
             _unitOfWork = unitOfWork;
         }
 
@@ -31,10 +31,10 @@ namespace Repository
             return await _repository.Create(entity);
         }
 
-        public async Task<List<Models.Domain.Viaje>> FindAll(int page, int limit)
+        public async Task<List<Models.Domain.Viaje>> FindAll(int page, int limit, bool useFilter, ViajesFilter fModel)
         {
             return await _repository
-                .FindAll(page, limit)
+                .FindAll(page, limit, useFilter, fModel)
                 .Include(v => v.CiudadOrigen)
                 .ThenInclude(c => c.Pais)
                 .Include(v => v.CiudadDestino)
@@ -59,7 +59,11 @@ namespace Repository
 
         public async Task<bool> SoftDelete(Models.Domain.Viaje entity)
         {
-            return await _repository.SoftDelete(entity);
+            if(await _unitOfWork.VehiculosRepository.FreeVehicle(entity.VehiculoId))
+            {
+                return await _repository.SoftDelete(entity);
+            }
+            return false;
         }
 
         public async Task<bool> Update(Models.Domain.Viaje entity)

@@ -3,8 +3,8 @@
     using AutoMapper;
     using Interfaces.Repositories;
     using Repository;
-
-    public class CiudadesServices : BasicServices<Models.Input.Ciudad, Models.Domain.Ciudad, Models.Output.Ciudad>, Interfaces.Services.ICiudadesServices
+    using Models.Filter;
+    public class CiudadesServices : BasicServices<Models.Input.Ciudad, Models.Domain.Ciudad, Models.Output.Ciudad, CiudadesFilter>, Interfaces.Services.ICiudadesServices
     {
         public CiudadesServices(
             IMapper mapper,

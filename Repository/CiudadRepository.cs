@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Models.Filter;
 namespace Repository
 {
     public class CiudadRepository : ICiudadRepository
     {
         private readonly TravelContext _context;
-        public IRepository<Models.Input.Ciudad, Models.Domain.Ciudad> _repository { get; }
+        public IRepository<Models.Input.Ciudad, Models.Domain.Ciudad,CiudadesFilter> _repository { get; }
 
         private UnitOfWork _unitOfWork;
 
@@ -18,7 +18,7 @@ namespace Repository
         public CiudadRepository(TravelContext context, UnitOfWork unitOfWork)
         {
             _context = context;
-            _repository = new Repository<Models.Input.Ciudad, Models.Domain.Ciudad>(context);
+            _repository = new Repository<Models.Input.Ciudad, Models.Domain.Ciudad, CiudadesFilter>(context);
             _unitOfWork = unitOfWork;
         }
 
@@ -49,10 +49,10 @@ namespace Repository
             return ciudad;
         }
 
-        public async Task<List<Ciudad>> FindAll(int page, int limit)
+        public async Task<List<Ciudad>> FindAll(int page, int limit, bool useFilter, CiudadesFilter fModel)
         {
             return await _repository
-                .FindAll(page, limit)
+                .FindAll(page, limit,useFilter, fModel)
                 .Include(p => p.Pais)
                 .Where(c => c.Pais.DeletedAt == null)
                 .ToListAsync();

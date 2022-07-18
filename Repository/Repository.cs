@@ -6,7 +6,7 @@ using Interfaces.Repositories;
 
 namespace Repository
 {
-    public class Repository<InputType, DomainType> : IRepository<InputType, DomainType> where DomainType : Models.Domain.Entity
+    public class Repository<InputType, DomainType, FilterType> : IRepository<InputType, DomainType, FilterType> where DomainType : Models.Domain.Entity
     {
         public readonly DbSet<DomainType> _repository;
         public readonly TravelContext _context;
@@ -42,13 +42,17 @@ namespace Repository
             .Where(x => x.DeletedAt == null && x.Id == id)
             .AsQueryable();
 
-        public IQueryable<DomainType> FindAll(int page, int limit)
-        =>
-             _repository
+        public IQueryable<DomainType> FindAll(int page, int limit, bool useFilter, FilterType fModel)
+        {
+            var query = _repository
                 .Where(p => p.DeletedAt == null)
                 .Skip(page > 1 ? page * limit : 0)
                 .Take(limit)
                 .AsQueryable();
+
+            return useFilter ? Filter(query, fModel) : query;
+        }
+
         public IQueryable<DomainType> Count()
         =>
           _repository
@@ -71,6 +75,10 @@ namespace Repository
                 }
             else
                 return false;
+        }
+        public IQueryable<DomainType> Filter(IQueryable<DomainType> query, FilterType fModel)
+        {
+            return query.AsQueryable();
         }
     }
 }

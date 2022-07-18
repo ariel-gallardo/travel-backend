@@ -1,6 +1,7 @@
 ﻿namespace Interfaces.Services
 {
-    public interface IPaisesServices : IRepository<Models.Input.Pais, Models.Domain.Pais, Models.Output.Pais>
+    using Models.Filter;
+    public interface IPaisesServices : IRepository<Models.Input.Pais, Models.Domain.Pais, Models.Output.Pais, PaisesFilter>
     {
 
     }
