@@ -32,9 +32,9 @@ namespace Repository
         {
             if (entity != null)
             {
-                _repository
-                .Update(entity);
-                return await _context.SaveChangesAsync() > 0;
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
             }
             return false;
         }
@@ -42,7 +42,8 @@ namespace Repository
         =>
            _repository
             .Where(x => x.DeletedAt == null && x.Id == id)
-            .AsQueryable();
+            .AsQueryable()
+            .AsNoTracking();
 
         public IQueryable<DomainType> FindAll(int page, int limit)
         =>

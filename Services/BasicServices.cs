@@ -125,7 +125,7 @@ namespace Services
                 try
                 {
                     await _repository.Update(_mapper.Map(inputDto, domainData));
-                    output.StatusCode = 204;
+                    output.StatusCode = 200;
                     output.Data = true;
                     output.Messages.Add($"{typeof(DomainType).Name} updated successfully");
                 }
