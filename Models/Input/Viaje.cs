@@ -7,6 +7,7 @@ namespace Models.Input
 
     public class Viaje
     {
+        public long? Id { get; set; }
 
         [Required(ErrorMessage = "Debe asignar una ciudad de origen.")]
         [Range(1, long.MaxValue, ErrorMessage = "Debe asignar una ciudad de origen.")]
