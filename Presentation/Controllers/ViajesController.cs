@@ -124,7 +124,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Output), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Output<bool>), StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Models.Input.Viaje t, long id)
+        public async Task<IActionResult> Update([FromForm] Models.Input.Viaje t, long id)
         {
             var output = await _services.Update(t, id);
             return StatusCode(output.StatusCode, output);

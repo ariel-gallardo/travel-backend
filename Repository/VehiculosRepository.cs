@@ -103,7 +103,7 @@ namespace Repository
 
         public IQueryable<Vehiculo> Filter(bool useFilter, VehiculosFilter fModel, IQueryable<Vehiculo> query)
         {
-            throw new System.NotImplementedException();
+            return query;
         }
     }
 }

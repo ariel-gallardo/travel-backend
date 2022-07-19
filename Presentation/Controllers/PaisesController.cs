@@ -32,7 +32,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Models.Input.Pais t)
+        public async Task<IActionResult> Create([FromForm] Models.Input.Pais t)
         {
             var output = await _services.Create(t);
             return StatusCode(output.StatusCode, output);
@@ -117,7 +117,7 @@ namespace Presentation.Controllers
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.Output.Output<bool>), StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] Models.Input.Pais t, long id)
+        public async Task<IActionResult> Update([FromForm] Models.Input.Pais t, long id)
         {
             var output = await _services.Update(t, id);
             return StatusCode(output.StatusCode, output);
