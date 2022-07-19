@@ -13,5 +13,6 @@ namespace Models.Input
 
         [Required(ErrorMessage = "Falta el tipo de vehiculo.")]
         public long TipoVehiculoId { get; set; }
+        public bool ItsBusy { get; set; } = false;
     }
 }

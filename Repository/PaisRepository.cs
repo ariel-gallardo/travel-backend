@@ -40,8 +40,7 @@ namespace Repository
         {
             return await _repository
               .FindById(id)
-              .Include(p => p.Ciudades)
-              .Where(p => p.Ciudades.All(c => c.DeletedAt == null))
+              .Include(p => p.Ciudades.Where(c => c.DeletedAt == null))
               .FirstOrDefaultAsync();
         }
 
@@ -49,8 +48,7 @@ namespace Repository
         {
             var query = _repository
                 .FindAll(page, limit)
-                .Include(p => p.Ciudades)
-                .Where(p => p.Ciudades.All(c => c.DeletedAt == null && p.Id == c.PaisId));
+                .Include(p => p.Ciudades.Where(c => c.DeletedAt == null));
 
             return await Filter(useFilter,fModel, query).ToListAsync(); ;
         }

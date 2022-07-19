@@ -36,8 +36,7 @@ namespace Repository
         {
             var query = _repository
                 .FindAll(page, limit)
-                .Include(tv => tv.Vehiculos)
-                .Where(tv => tv.Vehiculos.All(v => v.DeletedAt == null));
+                .Include(tv => tv.Vehiculos.Where(v => v.DeletedAt == null));
 
                 return await Filter(useFilter, fModel, query).ToListAsync();
         }
@@ -46,8 +45,8 @@ namespace Repository
         {
             return await _repository
                 .FindById(id)
-                .Include(tv => tv.Vehiculos)
-                .Where(tv => tv.Vehiculos.All(v => v.DeletedAt == null))
+                .Include(tv => tv.Vehiculos.Where(v => v.DeletedAt == null))
+
                 .FirstOrDefaultAsync();
         }
 

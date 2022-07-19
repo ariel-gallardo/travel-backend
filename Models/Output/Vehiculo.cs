@@ -9,5 +9,6 @@
         public string Color { get; set; }
         public string TipoVehiculo { get; set; }
         public bool ItsBusy { get; set; }
+        public long TipoVehiculoId { get; set; }
     }
 }
